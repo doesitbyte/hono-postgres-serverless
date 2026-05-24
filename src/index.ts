@@ -9,11 +9,18 @@ let db: ReturnType<typeof createDb> | null = null;
 
 const app = new Hono<AppEnv>();
 
-app.use("*", cors({
-  origin: (origin) => origin.startsWith("http://localhost") ? origin : null,
-  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowHeaders: ["Content-Type", "Authorization"],
-}));
+app.use("*", async (c, next) => {
+  const extra = c.env.ALLOWED_ORIGINS
+    ? c.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+    : [];
+
+  return cors({
+    origin: (origin) =>
+      origin.startsWith("http://localhost") || extra.includes(origin) ? origin : null,
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+  })(c, next);
+});
 
 app.use("*", async (c, next) => {
   if (!db) db = createDb(c.env.PG_DATABASE_URL);

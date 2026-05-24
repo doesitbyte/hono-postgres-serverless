@@ -7,6 +7,7 @@ export type AppEnv = {
     CLERK_SECRET_KEY: string;
     CLERK_PUBLISHABLE_KEY: string;
     OPENAI_API_KEY: string;
+    ALLOWED_ORIGINS?: string;
   };
   Variables: {
     db: Db;
