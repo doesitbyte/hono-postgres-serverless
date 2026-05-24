@@ -1,1 +1,1 @@
-export const openapiAppName = "boilerplate";
+export const openapiAppName = "godwit-backend";

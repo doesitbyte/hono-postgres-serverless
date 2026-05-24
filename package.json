@@ -1,5 +1,5 @@
 {
-  "name": "hono-postgres-serverless",
+  "name": "godwit",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
@@ -7,12 +7,14 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
+    "@clerk/backend": "^3.4.9",
     "@hono/swagger-ui": "^0.6.1",
     "@hono/zod-openapi": "^1.2.4",
     "@neondatabase/serverless": "^1.0.2",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.10",
+    "openai": "^6.38.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -20,6 +22,7 @@
     "@types/pg": "^8.20.0",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
     "wrangler": "^4.4.0"
   }
 }

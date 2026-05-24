@@ -4,6 +4,17 @@ export const responseMeta = z.object({
   timestamp: z.iso.datetime(),
 });
 
+export const paginationMeta = z.object({
+  total: z.number().int(),
+  page: z.number().int(),
+  limit: z.number().int(),
+  totalPages: z.number().int(),
+});
+
+export const paginatedResponseMeta = responseMeta.extend({
+  pagination: paginationMeta,
+});
+
 export const apiError = z.object({
   code: z.string(),
   message: z.string(),
@@ -25,8 +36,27 @@ export const errorEnvelope = <Schema extends z.ZodType>(error: Schema) =>
     meta: responseMeta,
   });
 
+export const paginatedSuccessEnvelope = <Schema extends z.ZodType>(
+  data: Schema
+) =>
+  z.object({
+    success: z.literal(true),
+    data,
+    error: z.null(),
+    meta: paginatedResponseMeta,
+  });
+
 export type ResponseMeta = z.infer<typeof responseMeta>;
+export type PaginationMeta = z.infer<typeof paginationMeta>;
+export type PaginatedResponseMeta = z.infer<typeof paginatedResponseMeta>;
 export type ApiError = z.infer<typeof apiError>;
+
+export type PaginatedSuccessEnvelope<Data> = {
+  success: true;
+  data: Data;
+  error: null;
+  meta: PaginatedResponseMeta;
+};
 
 export type SuccessEnvelope<Data> = {
   success: true;
@@ -66,4 +96,14 @@ export const createErrorEnvelope = <Error extends ApiError>(
   data: null,
   error,
   meta: createResponseMeta(),
+});
+
+export const createPaginatedSuccessEnvelope = <Data>(
+  data: Data,
+  pagination: PaginationMeta
+): PaginatedSuccessEnvelope<Data> => ({
+  success: true,
+  data,
+  error: null,
+  meta: { ...createResponseMeta(), pagination },
 });
